@@ -2,64 +2,229 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Zine Multi-Page AR | Digital Poetics Press</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no"
+  />
 
+  <title>Digital Poetics Press 2 — AR Test</title>
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+
+  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: monospace; }
-    #scan-hint {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 999;
-      background: rgba(13, 13, 13, 0.85);
-      color: #f7f4ee;
-      border: 1px solid #444;
-      border-radius: 999px;
-      padding: 0.6rem 1.4rem;
-      font-size: 0.8rem;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      white-space: nowrap;
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: black;
     }
-    a-scene { width: 100% !important; height: 100% !important; }
+
+    #start-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #start-button {
+      margin-top: 20px;
+      padding: 16px 28px;
+      font-size: 18px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #status {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    a-scene {
+      width: 100%;
+      height: 100%;
+    }
   </style>
 </head>
+
 <body>
 
-  <div id="scan-hint">Point camera at Page 1</div>
+  <div id="start-screen">
+    <h1>Digital Poetics Press</h1>
+    <p>WebAR prototype</p>
+    <button id="start-button">Start Camera</button>
+  </div>
+
+  <div id="status">SYSTEM READY</div>
 
   <a-scene
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no;"
+    mindar-image="
+      imageTargetSrc: ./targets.mind;
+      autoStart: false;
+      uiLoading: no;
+      uiScanning: no;
+      uiError: yes;
+    "
+    embedded
     color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights: true"
+    renderer="colorManagement: true; physicallyCorrectLights: true"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
   >
-    <a-assets timeout="10000">
-      <!-- Only list files that ARE ACTUALLY in your repository -->
-      <a-asset-item id="model-p1" src="./page1.glb"></a-asset-item>
+
+    <a-assets>
+      <img
+        id="overlay1"
+        src="./overlay1.png"
+        crossorigin="anonymous"
+      />
+
+      <img
+        id="overlay2"
+        src="./overlay2.png"
+        crossorigin="anonymous"
+      />
+
+      <img
+        id="overlay3"
+        src="./overlay3.png"
+        crossorigin="anonymous"
+      />
     </a-assets>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false"
+    ></a-camera>
 
-    <!-- PAGE 1 (Index 0 in your targets.mind) -->
-    <a-entity mindar-image-target="targetIndex: 0" class="page-anchor" id="anchor-p1">
-      <a-gltf-model src="#model-p1" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
+    <!-- TRIGGER 1 -->
+    <a-entity
+      id="target1"
+      mindar-image-target="targetIndex: 0"
+    >
+      <a-plane
+        src="#overlay1"
+        position="0 0 0.1"
+        width="1"
+        height="1"
+        material="transparent: true"
+      ></a-plane>
     </a-entity>
+
+    <!-- TRIGGER 2 -->
+    <a-entity
+      id="target2"
+      mindar-image-target="targetIndex: 1"
+    >
+      <a-plane
+        src="#overlay2"
+        position="0 0 0.1"
+        width="1"
+        height="1"
+        material="transparent: true"
+      ></a-plane>
+    </a-entity>
+
+    <!-- TRIGGER 3 -->
+    <a-entity
+      id="target3"
+      mindar-image-target="targetIndex: 2"
+    >
+      <a-plane
+        src="#overlay3"
+        position="0 0 0.1"
+        width="1"
+        height="1"
+        material="transparent: true"
+      ></a-plane>
+    </a-entity>
+
   </a-scene>
 
   <script>
-    const hint = document.getElementById('scan-hint');
-    const anchor = document.getElementById('anchor-p1');
-    anchor.addEventListener('targetFound', () => { hint.style.opacity = '0'; });
-    anchor.addEventListener('targetLost', () => { hint.style.opacity = '1'; });
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const scene = document.querySelector("a-scene");
+      const startButton = document.querySelector("#start-button");
+      const startScreen = document.querySelector("#start-screen");
+      const status = document.querySelector("#status");
+
+      const target1 = document.querySelector("#target1");
+      const target2 = document.querySelector("#target2");
+      const target3 = document.querySelector("#target3");
+
+      scene.addEventListener("loaded", () => {
+
+        status.textContent = "AR ENGINE READY";
+
+        const arSystem = scene.systems["mindar-image-system"];
+
+        startButton.addEventListener("click", async () => {
+
+          status.textContent = "STARTING CAMERA...";
+
+          try {
+            await arSystem.start();
+
+            startScreen.style.display = "none";
+            status.textContent = "CAMERA ACTIVE — FIND A TRIGGER";
+
+          } catch (error) {
+            console.error(error);
+            status.textContent = "CAMERA ERROR — " + error.message;
+          }
+        });
+      });
+
+      target1.addEventListener("targetFound", () => {
+        status.textContent = "TRIGGER 1 FOUND";
+      });
+
+      target1.addEventListener("targetLost", () => {
+        status.textContent = "SEARCHING...";
+      });
+
+      target2.addEventListener("targetFound", () => {
+        status.textContent = "TRIGGER 2 FOUND";
+      });
+
+      target2.addEventListener("targetLost", () => {
+        status.textContent = "SEARCHING...";
+      });
+
+      target3.addEventListener("targetFound", () => {
+        status.textContent = "TRIGGER 3 FOUND";
+      });
+
+      target3.addEventListener("targetLost", () => {
+        status.textContent = "SEARCHING...";
+      });
+
+    });
   </script>
+
 </body>
 </html>
