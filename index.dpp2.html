@@ -33,7 +33,7 @@
 </head>
 <body>
 
-  <div id="scan-hint">Point camera at any zine page</div>
+  <div id="scan-hint">Point camera at Page 1</div>
 
   <a-scene
     mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiScanning: no;"
@@ -42,79 +42,24 @@
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
   >
-    <!-- Preload all your models or images here -->
-    <a-assets>
+    <a-assets timeout="10000">
+      <!-- Only list files that ARE ACTUALLY in your repository -->
       <a-asset-item id="model-p1" src="./page1.glb"></a-asset-item>
-      <a-asset-item id="model-p2" src="./page2.glb"></a-asset-item>
-      <img id="img-p3" src="./page3.png" crossorigin="anonymous" />
-      <a-asset-item id="model-p4" src="./page4.glb"></a-asset-item>
-      <a-asset-item id="model-p5" src="./page5.glb"></a-asset-item>
-      <a-asset-item id="model-p6" src="./page6.glb"></a-asset-item>
-      <a-asset-item id="model-p7" src="./page7.glb"></a-asset-item>
-      <a-asset-item id="model-p8" src="./page8.glb"></a-asset-item>
-      <a-asset-item id="model-p9" src="./page9.glb"></a-asset-item>
-      <a-asset-item id="model-p10" src="./page10.glb"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- PAGE 1 (Index 0) -->
-    <a-entity mindar-image-target="targetIndex: 0" class="page-anchor">
+    <!-- PAGE 1 (Index 0 in your targets.mind) -->
+    <a-entity mindar-image-target="targetIndex: 0" class="page-anchor" id="anchor-p1">
       <a-gltf-model src="#model-p1" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 2 (Index 1) -->
-    <a-entity mindar-image-target="targetIndex: 1" class="page-anchor">
-      <a-gltf-model src="#model-p2" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 3 (Index 2 - Example using flat image overlay) -->
-    <a-entity mindar-image-target="targetIndex: 2" class="page-anchor">
-      <a-image src="#img-p3" position="0 0 0" scale="1 1 1" opacity="0.95"></a-image>
-    </a-entity>
-
-    <!-- PAGE 4 (Index 3) -->
-    <a-entity mindar-image-target="targetIndex: 3" class="page-anchor">
-      <a-gltf-model src="#model-p4" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 5 (Index 4) -->
-    <a-entity mindar-image-target="targetIndex: 4" class="page-anchor">
-      <a-gltf-model src="#model-p5" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 6 (Index 5) -->
-    <a-entity mindar-image-target="targetIndex: 5" class="page-anchor">
-      <a-gltf-model src="#model-p6" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 7 (Index 6) -->
-    <a-entity mindar-image-target="targetIndex: 6" class="page-anchor">
-      <a-gltf-model src="#model-p7" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 8 (Index 7) -->
-    <a-entity mindar-image-target="targetIndex: 7" class="page-anchor">
-      <a-gltf-model src="#model-p8" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 9 (Index 8) -->
-    <a-entity mindar-image-target="targetIndex: 8" class="page-anchor">
-      <a-gltf-model src="#model-p9" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
-    </a-entity>
-
-    <!-- PAGE 10 (Index 9) -->
-    <a-entity mindar-image-target="targetIndex: 9" class="page-anchor">
-      <a-gltf-model src="#model-p10" position="0 0 0" rotation="0 0 0" scale="1 1 1"></a-gltf-model>
     </a-entity>
   </a-scene>
 
   <script>
     const hint = document.getElementById('scan-hint');
-    document.querySelectorAll('.page-anchor').forEach(anchor => {
-      anchor.addEventListener('targetFound', () => { hint.style.opacity = '0'; });
-      anchor.addEventListener('targetLost', () => { hint.style.opacity = '1'; });
-    });
+    const anchor = document.getElementById('anchor-p1');
+    anchor.addEventListener('targetFound', () => { hint.style.opacity = '0'; });
+    anchor.addEventListener('targetLost', () => { hint.style.opacity = '1'; });
   </script>
 </body>
 </html>
